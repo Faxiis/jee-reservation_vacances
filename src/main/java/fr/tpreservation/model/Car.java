@@ -37,5 +37,6 @@ public class Car extends Reservation {
     private String description;
 
     private Boolean available;
-
+    
+    private Boolean ecoFriendly; 
 }

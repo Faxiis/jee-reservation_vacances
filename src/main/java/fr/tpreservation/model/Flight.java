@@ -45,6 +45,8 @@ public class Flight extends Reservation {
 
     private int totalSeats;
 
+    private Boolean ecoFriendly; 
+
     @JoinColumn
     @ManyToOne
     private Plane plane;
