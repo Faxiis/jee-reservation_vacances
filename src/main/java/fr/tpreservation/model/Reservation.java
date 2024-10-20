@@ -9,12 +9,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "reservation")
 @Getter
 @Setter
 public class Reservation {
@@ -25,7 +23,7 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDateTime reservationDate;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn
     @ManyToOne
     private User user;
 }

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -19,7 +18,7 @@ import lombok.Setter;
 @Table(name = "flight")
 @Getter
 @Setter
-public class Flight extends Reservation {
+public class Flight {
     @Id
     @UuidGenerator
     private String id;
