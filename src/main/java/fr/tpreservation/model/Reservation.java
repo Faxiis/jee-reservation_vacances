@@ -25,5 +25,5 @@ public class Reservation {
 
     @JoinColumn
     @ManyToOne
-    private User user;
+    private Utilisateur user;
 }

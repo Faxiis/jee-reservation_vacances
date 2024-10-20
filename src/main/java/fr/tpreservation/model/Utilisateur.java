@@ -14,10 +14,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "\"user\"")
 @Getter
 @Setter
-public class User {
+public class Utilisateur {
     @Id
     @UuidGenerator
     private String id;
