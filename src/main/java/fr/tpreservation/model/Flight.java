@@ -1,15 +1,16 @@
 package fr.tpreservation.model;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +49,7 @@ public class Flight {
     @ManyToOne
     private Plane plane;
 
+    @OneToMany
     private List<Reservation> reservations;
 
 }
