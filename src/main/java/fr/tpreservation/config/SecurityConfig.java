@@ -19,7 +19,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> {
             // authorize.requestMatchers("/api/fournisseur/**").hasAuthority("ROLE_ADMIN");
             authorize.requestMatchers("/api/fournisseur/**").hasRole("ADMIN");
-            authorize.requestMatchers("/api/utilisateur/subscribe", "/api/utilisateur/auth").permitAll();
+            authorize.requestMatchers("users/subscribe", "/users/auth").permitAll();
             authorize.requestMatchers("/**").authenticated();
         });
         http.csrf(csrf -> csrf.disable());
