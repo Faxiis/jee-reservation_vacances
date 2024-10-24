@@ -34,21 +34,15 @@ public class CarController {
             .toList();
     }
 
-    private CarResponse convert(Car car) {
-        CarResponse resp = CarResponse.builder().build();
-        BeanUtils.copyProperties(car, resp);
-
-        return resp;
-    }
-
+    
     @GetMapping("/availability/{isAvailable}")
     public List<CarResponse> findAvailableCars(@PathVariable Boolean isAvailable) {
         return this.carRepository.findByAvailable(isAvailable)
-            .stream()
-            .map(this::convert)
-            .toList();
+        .stream()
+        .map(this::convert)
+        .toList();
     }
-
+    
     @GetMapping("/{id}")
     public ResponseEntity<CarResponse> getCarById(@PathVariable String id) {
         Optional<Car> carOptional = carRepository.findById(id);
@@ -59,7 +53,7 @@ public class CarController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    
     @PostMapping
     public ResponseEntity<CarResponse> addCar(@RequestBody CarRequest carRequest) {
         Car car = new Car();
@@ -68,7 +62,7 @@ public class CarController {
         CarResponse carResponse = convert(savedCar);
         return ResponseEntity.status(201).body(carResponse);
     }
-
+    
     @PutMapping("/{id}")
     public ResponseEntity<CarResponse> updateCar(@PathVariable String id, @RequestBody CarRequest carRequest) {
         Optional<Car> carOptional = carRepository.findById(id);
@@ -82,7 +76,7 @@ public class CarController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCar(@PathVariable String id) {
         if (carRepository.existsById(id)) {
@@ -91,5 +85,11 @@ public class CarController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private CarResponse convert(Car car) {
+        CarResponse resp = CarResponse.builder().build();
+        BeanUtils.copyProperties(car, resp);
+        return resp;
     }
 }
