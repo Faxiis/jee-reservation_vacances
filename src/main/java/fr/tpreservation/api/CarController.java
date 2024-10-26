@@ -34,7 +34,6 @@ public class CarController {
             .toList();
     }
 
-    
     @GetMapping("/availability/{isAvailable}")
     public List<CarResponse> findAvailableCars(@PathVariable Boolean isAvailable) {
         return this.carRepository.findByAvailable(isAvailable)
