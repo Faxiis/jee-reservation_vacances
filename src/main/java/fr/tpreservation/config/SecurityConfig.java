@@ -2,6 +2,7 @@ package fr.tpreservation.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,8 +19,10 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http, JwtHeaderFilter jwtHeaderFilter) throws Exception {
         http.authorizeHttpRequests(authorize -> {
             // authorize.requestMatchers("/api/fournisseur/**").hasAuthority("ROLE_ADMIN");
-            authorize.requestMatchers("/api/fournisseur/**").hasRole("ADMIN");
-            authorize.requestMatchers("users/subscribe", "/users/auth", "cars/").permitAll();
+            authorize.requestMatchers(HttpMethod.POST, "/cars/**").hasRole("ADMIN");
+            authorize.requestMatchers(HttpMethod.PUT, "/cars/**").hasRole("ADMIN");
+            authorize.requestMatchers(HttpMethod.DELETE, "/cars/**").hasRole("ADMIN");
+            // authorize.requestMatchers("users/subscribe", "/users/auth", "cars/").permitAll();
             authorize.requestMatchers("/**").authenticated();
         });
         http.csrf(csrf -> csrf.disable());

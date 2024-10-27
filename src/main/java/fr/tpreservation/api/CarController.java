@@ -18,6 +18,7 @@ import fr.tpreservation.model.Car;
 import fr.tpreservation.repo.CarRepository;
 import fr.tpreservation.request.CarRequest;
 import fr.tpreservation.response.CarResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -52,16 +53,16 @@ public class CarController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @PostMapping
-    public ResponseEntity<CarResponse> addCar(@RequestBody CarRequest carRequest) {
+    public ResponseEntity<CarResponse> addCar(@Valid @RequestBody CarRequest carRequest) {
         Car car = new Car();
         BeanUtils.copyProperties(carRequest, car);
         Car savedCar = carRepository.save(car);
         CarResponse carResponse = convert(savedCar);
         return ResponseEntity.status(201).body(carResponse);
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<CarResponse> updateCar(@PathVariable String id, @RequestBody CarRequest carRequest) {
         Optional<Car> carOptional = carRepository.findById(id);
