@@ -32,7 +32,6 @@ public class CarControllerMockitoTest {
 
     @MockBean
     private CarRepository repository;
-
     private static final CarRequest carRequest = new CarRequest() {{
         setModel("Model S");
         setBrand("Tesla");
@@ -335,7 +334,8 @@ public class CarControllerMockitoTest {
 
         Mockito.verify(this.repository, Mockito.never()).save(Mockito.any(Car.class));
     }
-
+    
+    // Doit retourner une erreur 400 si la requête pour ajouter une voiture est invalide.
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldReturnBadRequestWhenCarRequestIsInvalid() throws Exception {
@@ -446,6 +446,9 @@ public class CarControllerMockitoTest {
 
         Mockito.verify(this.repository, Mockito.never()).findById(Mockito.anyString());
     }
+
+    // Todo : Doit retourner une erreur 400 si la requete est invalide.
+
 
     /*
     * DELETE /cars/{id}

@@ -18,11 +18,14 @@ public class SecurityConfig {
     @Bean // Configuration des accès (Authorization)
     SecurityFilterChain filterChain(HttpSecurity http, JwtHeaderFilter jwtHeaderFilter) throws Exception {
         http.authorizeHttpRequests(authorize -> {
-            // authorize.requestMatchers("/api/fournisseur/**").hasAuthority("ROLE_ADMIN");
             authorize.requestMatchers(HttpMethod.POST, "/cars/**").hasRole("ADMIN");
             authorize.requestMatchers(HttpMethod.PUT, "/cars/**").hasRole("ADMIN");
             authorize.requestMatchers(HttpMethod.DELETE, "/cars/**").hasRole("ADMIN");
-            // authorize.requestMatchers("users/subscribe", "/users/auth", "cars/").permitAll();
+
+            authorize.requestMatchers(HttpMethod.POST, "/hostels/**").hasRole("ADMIN");
+            authorize.requestMatchers(HttpMethod.PUT, "/hostels/**").hasRole("ADMIN");
+            authorize.requestMatchers(HttpMethod.DELETE, "/hostels/**").hasRole("ADMIN");
+
             authorize.requestMatchers("/**").authenticated();
         });
         http.csrf(csrf -> csrf.disable());

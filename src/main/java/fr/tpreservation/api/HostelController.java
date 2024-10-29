@@ -18,13 +18,14 @@ import fr.tpreservation.model.Hotel;
 import fr.tpreservation.repo.HostelRepository;
 import fr.tpreservation.request.HostelRequest;
 import fr.tpreservation.response.HostelResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/hostels")
 @RequiredArgsConstructor
 public class HostelController {
-      private final HostelRepository hostelRepository;
+    private final HostelRepository hostelRepository;
 
     @GetMapping
     public List<HostelResponse> findAll() {
@@ -46,7 +47,7 @@ public class HostelController {
     }
 
     @PostMapping
-    public ResponseEntity<HostelResponse> addHotel(@RequestBody HostelRequest hostelRequest) {
+    public ResponseEntity<HostelResponse> addHotel(@Valid @RequestBody HostelRequest hostelRequest) {
         Hotel hotel = new Hotel();
         BeanUtils.copyProperties(hostelRequest, hotel);
         Hotel savedHotel = hostelRepository.save(hotel);
