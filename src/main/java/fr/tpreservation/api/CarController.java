@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.tpreservation.model.Car;
 import fr.tpreservation.repo.CarRepository;
-import fr.tpreservation.request.CarRequest;
+import fr.tpreservation.request.Car.PostCarRequest;
+import fr.tpreservation.request.Car.PutCarRequest;
 import fr.tpreservation.response.CarResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class CarController {
     }
 
     @PostMapping
-    public ResponseEntity<CarResponse> addCar(@Valid @RequestBody CarRequest carRequest) {
+    public ResponseEntity<CarResponse> addCar(@Valid @RequestBody PostCarRequest carRequest) {
         Car car = new Car();
         BeanUtils.copyProperties(carRequest, car);
         Car savedCar = carRepository.save(car);
@@ -64,7 +65,7 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CarResponse> updateCar(@PathVariable String id, @RequestBody CarRequest carRequest) {
+    public ResponseEntity<CarResponse> updateCar(@PathVariable String id, @RequestBody PutCarRequest carRequest) {
         Optional<Car> carOptional = carRepository.findById(id);
         if (carOptional.isPresent()) {
             Car car = carOptional.get();

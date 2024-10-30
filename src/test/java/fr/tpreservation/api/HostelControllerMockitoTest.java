@@ -13,20 +13,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.tpreservation.model.Hotel;
 import fr.tpreservation.repo.HostelRepository;
-import fr.tpreservation.request.HostelRequest;
+import fr.tpreservation.request.Hostel.PostHostelRequest;
+import fr.tpreservation.request.Hostel.PutHostelRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,6 +37,7 @@ public class HostelControllerMockitoTest {
 
     @MockBean
     private HostelRepository repository;
+    
     /*
      * GET /hotels
      */
@@ -173,7 +174,7 @@ public class HostelControllerMockitoTest {
   @WithMockUser(roles = "ADMIN")
   void shouldAllowAdminToAddHotel() throws Exception {
       // given
-      HostelRequest hostelRequest = new HostelRequest();
+      PostHostelRequest hostelRequest = new PostHostelRequest();
       hostelRequest.setName("Luxury Inn");
       hostelRequest.setAddress("123 Luxury St");
       hostelRequest.setCity("Paris");
@@ -217,7 +218,7 @@ public class HostelControllerMockitoTest {
   @WithMockUser(roles = "USER")
   void shouldDenyNonAdminUserToAddHotel() throws Exception {
       // given
-      HostelRequest hostelRequest = new HostelRequest();
+      PostHostelRequest hostelRequest = new PostHostelRequest();
       hostelRequest.setName("Luxury Inn");
 
       // when
@@ -235,7 +236,7 @@ public class HostelControllerMockitoTest {
   @WithMockUser(roles = "ADMIN")
   void shouldReturnBadRequestWhenAddingHotelWithInvalidData() throws Exception {
       // given
-      HostelRequest hostelRequest = new HostelRequest();
+      PostHostelRequest hostelRequest = new PostHostelRequest();
       
       // when
       this.mockMvc.perform(post("/hostels")
@@ -257,7 +258,7 @@ public class HostelControllerMockitoTest {
 void shouldAllowAdminToUpdateHotel() throws Exception {
     // given
     String hotelId = "1";
-    HostelRequest hostelRequest = new HostelRequest();
+    PutHostelRequest hostelRequest = new PutHostelRequest();
     hostelRequest.setName("Updated Luxury Inn");
     hostelRequest.setAddress("456 Updated St");
     hostelRequest.setCity("Paris");
@@ -314,7 +315,7 @@ void shouldAllowAdminToUpdateHotel() throws Exception {
     void shouldReturnNotFoundWhenUpdatingNonExistingHotel() throws Exception {
         // given
         String hotelId = "999"; // Un ID d'hôtel qui n'existe pas
-        HostelRequest hostelRequest = new HostelRequest();
+        PutHostelRequest hostelRequest = new PutHostelRequest();
         hostelRequest.setName("Luxury Inn");
 
         Mockito.when(this.repository.findById(hotelId)).thenReturn(Optional.empty());
@@ -328,16 +329,14 @@ void shouldAllowAdminToUpdateHotel() throws Exception {
 
         Mockito.verify(this.repository, Mockito.never()).save(Mockito.any(Hotel.class));
     }
-
-    // Todo : Doit retourner une erreur 400 si la requete est invalide.
-
+    
     // Doit retourner une erreur d'autorisation (403) si l'utilisateur n'a pas le rôle ADMIN.
     @Test
     @WithMockUser(roles = "USER")
     void shouldDenyNonAdminUserToUpdateHotel() throws Exception {
         // given
         String hotelId = "1";
-        HostelRequest hostelRequest = new HostelRequest();
+        PutHostelRequest hostelRequest = new PutHostelRequest();
         hostelRequest.setName("Luxury Inn");
 
         // when

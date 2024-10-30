@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.tpreservation.model.Hotel;
 import fr.tpreservation.repo.HostelRepository;
-import fr.tpreservation.request.HostelRequest;
+import fr.tpreservation.request.Hostel.PostHostelRequest;
+import fr.tpreservation.request.Hostel.PutHostelRequest;
 import fr.tpreservation.response.HostelResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class HostelController {
     }
 
     @PostMapping
-    public ResponseEntity<HostelResponse> addHotel(@Valid @RequestBody HostelRequest hostelRequest) {
+    public ResponseEntity<HostelResponse> addHotel(@Valid @RequestBody PostHostelRequest hostelRequest) {
         Hotel hotel = new Hotel();
         BeanUtils.copyProperties(hostelRequest, hotel);
         Hotel savedHotel = hostelRepository.save(hotel);
@@ -56,7 +57,7 @@ public class HostelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HostelResponse> updateHotel(@PathVariable String id, @RequestBody HostelRequest hostelRequest) {
+    public ResponseEntity<HostelResponse> updateHotel(@PathVariable String id, @Valid @RequestBody PutHostelRequest hostelRequest) {
         Optional<Hotel> hotelOptional = hostelRepository.findById(id);
         if (hotelOptional.isPresent()) {
             Hotel hotel = hotelOptional.get();
