@@ -26,6 +26,8 @@ public class SecurityConfig {
             authorize.requestMatchers(HttpMethod.PUT, "/hostels/**").hasRole("ADMIN");
             authorize.requestMatchers(HttpMethod.DELETE, "/hostels/**").hasRole("ADMIN");
 
+            authorize.requestMatchers("users/subscribe", "/users/auth").permitAll();
+
             authorize.requestMatchers("/**").authenticated();
         });
         http.csrf(csrf -> csrf.disable());
