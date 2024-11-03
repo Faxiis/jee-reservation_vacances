@@ -78,7 +78,6 @@ public class FlightApiController {
         else {
             return ResponseEntity.notFound().build();
         }
-        
     }
 
     private FlightResponse convert(Flight flight) {
