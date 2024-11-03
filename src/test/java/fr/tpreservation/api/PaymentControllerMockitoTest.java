@@ -102,6 +102,19 @@ public class PaymentControllerMockitoTest {
         Mockito.verify(repository, Mockito.times(1)).findById("1");
     }
 
+
+    @Test
+    @WithMockUser
+    void shouldReturnNotFoundWhenPaymentByIdDoesNotExist() throws Exception {
+        Mockito.when(repository.findById("999")).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/payments/999"))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(repository, Mockito.times(1)).findById("999");
+    }
+
+
     @Test
     void shouldReturnUnauthorizedWhenNotLogged() throws Exception {
         mockMvc.perform(get("/payments"))
@@ -137,5 +150,17 @@ public class PaymentControllerMockitoTest {
                 .andExpect(jsonPath("$.status", Matchers.is("PENDING")));
 
         Mockito.verify(repository, Mockito.times(1)).save(Mockito.any(Payment.class));
+    }
+
+    @Test
+    @WithMockUser
+    void shouldReturnBadRequestWhenCreatingPaymentWithMissingFields() throws Exception {
+        setupObjectMapper();
+        PaymentRequest paymentRequest = new PaymentRequest();
+
+        mockMvc.perform(post("/payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(paymentRequest)))
+                .andExpect(status().isBadRequest());
     }
 }

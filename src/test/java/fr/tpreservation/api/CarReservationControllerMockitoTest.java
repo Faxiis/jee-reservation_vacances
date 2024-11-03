@@ -77,6 +77,10 @@ public class CarReservationControllerMockitoTest {
         return reservation;
     }
 
+    /*
+     * GET /car-reservation
+     */
+
     @Test
     @WithMockUser
     void shouldFindAllCarReservationsWhenLogged() throws Exception {
@@ -109,12 +113,27 @@ public class CarReservationControllerMockitoTest {
     }
 
     @Test
+    @WithMockUser
+    void shouldReturnNotFoundWhenCarReservationByIdDoesNotExist() throws Exception {
+        Mockito.when(repository.findById("999")).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/car-reservation/999"))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(repository, Mockito.times(1)).findById("999");
+    }
+
+    @Test
     void shouldReturnUnauthorizedWhenNotLogged() throws Exception {
         mockMvc.perform(get("/car-reservation"))
                 .andExpect(status().isUnauthorized());
 
         Mockito.verify(repository, Mockito.never()).findAll();
     }
+
+    /*
+     * POST /car-reservation
+     */
 
     @Test
     @WithMockUser
@@ -144,6 +163,24 @@ public class CarReservationControllerMockitoTest {
 
         Mockito.verify(repository, Mockito.times(1)).save(Mockito.any(CarReservation.class));
     }
+
+
+    @Test
+    @WithMockUser
+    void shouldReturnBadRequestWhenCreatingCarReservationWithMissingFields() throws Exception {
+        setupObjectMapper();
+        PostCarReservationRequest request = new PostCarReservationRequest();
+        // Missing required fields
+
+        mockMvc.perform(post("/car-reservation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    /*
+     * PUT /car-reservation
+     */
 
     @Test
     @WithMockUser
@@ -179,6 +216,29 @@ public class CarReservationControllerMockitoTest {
 
     @Test
     @WithMockUser
+    void shouldReturnNotFoundWhenUpdatingNonExistentCarReservation() throws Exception {
+        setupObjectMapper();
+        PutCarReservationRequest request = new PutCarReservationRequest();
+        request.setStartDate(LocalDateTime.of(2023, 10, 11, 10, 0));
+        request.setEndDate(LocalDateTime.of(2023, 10, 12, 10, 0));
+        request.setTotalPrice(200);
+
+        Mockito.when(repository.findById("999")).thenReturn(Optional.empty());
+
+        mockMvc.perform(put("/car-reservation/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(repository, Mockito.times(1)).findById("999");
+    }
+
+    /*
+     * DELETE /car-reservation
+     */
+
+    @Test
+    @WithMockUser
     void shouldDeleteCarReservation() throws Exception {
         Mockito.when(repository.existsById("1")).thenReturn(true);
 
@@ -187,5 +247,16 @@ public class CarReservationControllerMockitoTest {
 
         Mockito.verify(repository, Mockito.times(1)).existsById("1");
         Mockito.verify(repository, Mockito.times(1)).deleteById("1");
+    }
+
+    @Test
+    @WithMockUser
+    void shouldReturnNotFoundWhenDeletingNonExistentCarReservation() throws Exception {
+        Mockito.when(repository.existsById("999")).thenReturn(false);
+
+        mockMvc.perform(delete("/car-reservation/999"))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(repository, Mockito.times(1)).existsById("999");
     }
 }
