@@ -12,12 +12,16 @@ import org.hibernate.annotations.UuidGenerator;
 public class Payment {
     @Id
     @UuidGenerator
-    private Long id;
+    private String id;
+
     @Column(nullable = false)
     private String reservationId;
+    
     @Column(nullable = false)
     private Double amount;
+
     @Column(nullable = false)
     private String paymentMethod;
+    
     private String status;
 }
