@@ -84,9 +84,6 @@ public class PaymentControllerMockitoTest {
     @WithMockUser
     void shouldGetPaymentById() throws Exception {
         setupObjectMapper();
-        Utilisateur user = createUser();
-        Hotel hotel = createHotel();
-        HotelReservation reservation = createHotelReservation(user);
         Payment payment = createPayment();
 
         Mockito.when(repository.findById("1")).thenReturn(Optional.of(payment));
@@ -127,9 +124,6 @@ public class PaymentControllerMockitoTest {
     @WithMockUser
     void shouldAddPayment() throws Exception {
         setupObjectMapper();
-        Utilisateur user = createUser();
-        Hotel hotel = createHotel();
-        HotelReservation reservation = createHotelReservation(user);
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setReservationId("1");
         paymentRequest.setAmount(100.0);
@@ -162,5 +156,20 @@ public class PaymentControllerMockitoTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(paymentRequest)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnUnauthorizedWhenNotLoggedForPost() throws Exception {
+        setupObjectMapper();
+        PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.setReservationId("1");
+        paymentRequest.setAmount(100.0);
+        paymentRequest.setPaymentMethod("CREDIT_CARD");
+        paymentRequest.setPaymentDate(LocalDateTime.of(2023, 10, 10, 10, 0));
+
+        mockMvc.perform(post("/payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(paymentRequest)))
+                .andExpect(status().isUnauthorized());
     }
 }

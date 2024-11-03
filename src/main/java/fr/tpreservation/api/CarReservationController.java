@@ -76,12 +76,6 @@ public class CarReservationController {
         }
     }
 
-    //private ReservationResponse convert(CarReservation carReservation) {
-    //    ReservationResponse resp = ReservationResponse.builder().build();
-    //    BeanUtils.copyProperties(carReservation, resp);
-    //    return resp;
-    //}
-
     private ReservationResponse convert(CarReservation carReservation) {
         ReservationResponse resp = ReservationResponse.builder().build();
         resp.setId(carReservation.getId());

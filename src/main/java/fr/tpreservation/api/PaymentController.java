@@ -41,12 +41,6 @@ public class PaymentController {
 
     private PaymentResponse convert(Payment payment) {
         PaymentResponse resp = PaymentResponse.builder().build();
-        //resp.setId(payment.getId());
-        //resp.setReservationId(payment.getReservationId());
-        //resp.setAmount(payment.getAmount());
-        //resp.setPaymentMethod(payment.getPaymentMethod());
-        //resp.setPaymentDate(payment.getPaymentDate());
-        //resp.setStatus(payment.getStatus());
         BeanUtils.copyProperties(payment, resp);
         return resp;
     }

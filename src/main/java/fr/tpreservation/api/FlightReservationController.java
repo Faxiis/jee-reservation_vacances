@@ -3,7 +3,6 @@ package fr.tpreservation.api;
 import fr.tpreservation.model.FlightReservation;
 import fr.tpreservation.repo.FlightReservationRepository;
 import fr.tpreservation.request.FlightReservation.PostFlightReservationRequest;
-import fr.tpreservation.request.FlightReservation.PutFlightReservationRequest;
 import fr.tpreservation.response.ReservationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -47,20 +46,6 @@ public class FlightReservationController {
         FlightReservation savedFlightReservation = flightReservationRepository.save(flightReservation);
         ReservationResponse flightReservationResponse = convert(savedFlightReservation);
         return ResponseEntity.status(201).body(flightReservationResponse);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ReservationResponse> updateFlightReservation(@PathVariable String id, @Valid @RequestBody PutFlightReservationRequest flightReservationRequest) {
-        Optional<FlightReservation> flightReservationOptional = flightReservationRepository.findById(id);
-        if (flightReservationOptional.isPresent()) {
-            FlightReservation flightReservation = flightReservationOptional.get();
-            BeanUtils.copyProperties(flightReservationRequest, flightReservation, "id");
-            FlightReservation updatedFlightReservation = flightReservationRepository.save(flightReservation);
-            ReservationResponse flightReservationResponse = convert(updatedFlightReservation);
-            return ResponseEntity.ok(flightReservationResponse);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @DeleteMapping("/{id}")

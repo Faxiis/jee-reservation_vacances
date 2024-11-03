@@ -164,18 +164,32 @@ public class CarReservationControllerMockitoTest {
         Mockito.verify(repository, Mockito.times(1)).save(Mockito.any(CarReservation.class));
     }
 
-
     @Test
     @WithMockUser
     void shouldReturnBadRequestWhenCreatingCarReservationWithMissingFields() throws Exception {
         setupObjectMapper();
         PostCarReservationRequest request = new PostCarReservationRequest();
-        // Missing required fields
 
         mockMvc.perform(post("/car-reservation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnUnauthorizedWhenNotLoggedForPost() throws Exception {
+        setupObjectMapper();
+        PostCarReservationRequest request = new PostCarReservationRequest();
+        request.setCarId("1");
+        request.setUserId("1");
+        request.setStartDate(LocalDateTime.of(2023, 10, 10, 10, 0));
+        request.setEndDate(LocalDateTime.of(2023, 10, 10, 10, 0));
+        request.setTotalPrice(100);
+
+        mockMvc.perform(post("/car-reservation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized());
     }
 
     /*
@@ -233,6 +247,20 @@ public class CarReservationControllerMockitoTest {
         Mockito.verify(repository, Mockito.times(1)).findById("999");
     }
 
+    @Test
+    void shouldReturnUnauthorizedWhenNotLoggedForPut() throws Exception {
+        setupObjectMapper();
+        PutCarReservationRequest request = new PutCarReservationRequest();
+        request.setStartDate(LocalDateTime.of(2023, 10, 11, 10, 0));
+        request.setEndDate(LocalDateTime.of(2023, 10, 12, 10, 0));
+        request.setTotalPrice(200);
+
+        mockMvc.perform(put("/car-reservation/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized());
+    }
+
     /*
      * DELETE /car-reservation
      */
@@ -258,5 +286,11 @@ public class CarReservationControllerMockitoTest {
                 .andExpect(status().isNotFound());
 
         Mockito.verify(repository, Mockito.times(1)).existsById("999");
+    }
+
+    @Test
+    void shouldReturnUnauthorizedWhenNotLoggedForDelete() throws Exception {
+        mockMvc.perform(delete("/hostel-reservation/1"))
+                .andExpect(status().isUnauthorized());
     }
 }

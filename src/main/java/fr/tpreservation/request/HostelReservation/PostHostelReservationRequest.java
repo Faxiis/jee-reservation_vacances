@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class PostHostelReservationRequest {
-    @NotBlank(message = "Hostel ID is required")
-    private String hostelId;
+    @NotBlank(message = "Room ID is required")
+    private String roomId;
 
     @NotBlank(message = "User ID is required")
     private String userId;

@@ -7,7 +7,6 @@ import fr.tpreservation.model.FlightReservation;
 import fr.tpreservation.model.Utilisateur;
 import fr.tpreservation.repo.FlightReservationRepository;
 import fr.tpreservation.request.FlightReservation.PostFlightReservationRequest;
-import fr.tpreservation.request.FlightReservation.PutFlightReservationRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -114,7 +113,6 @@ public class FlightReservationControllerMockitoTest {
         Mockito.verify(repository, Mockito.never()).findAll();
     }
 
-
     @Test
     @WithMockUser
     void shouldReturnNotFoundWhenFlightReservationByIdDoesNotExist() throws Exception {
@@ -172,39 +170,21 @@ public class FlightReservationControllerMockitoTest {
                 .andExpect(status().isBadRequest());
     }
 
-    /*
-     * PUT /flight-reservation
-     */
+    @Test
+    void shouldReturnUnauthorizedWhenNotLoggedForPost() throws Exception {
+        setupObjectMapper();
+        PostFlightReservationRequest request = new PostFlightReservationRequest();
+        request.setFlightId("1");
+        request.setUserId("1");
+        request.setDepartureDate(LocalDateTime.of(2023, 10, 10, 10, 0));
+        request.setReturnDate(LocalDateTime.of(2023, 10, 11, 10, 0));
+        request.setTotalPrice(150);
 
-    //@Test
-    //@WithMockUser
-    //void shouldUpdateFlightReservation() throws Exception {
-    //    setupObjectMapper();
-    //    Utilisateur user = createUser();
-    //    Flight flight = createFlight();
-    //    FlightReservation existingReservation = createFlightReservation(user, flight);
-//
-    //    PutFlightReservationRequest request = new PutFlightReservationRequest();
-    //    request.setDepartureDate(LocalDateTime.of(2023, 10, 10, 10, 0));
-    //    request.setReturnDate(LocalDateTime.of(2023, 10, 11, 10, 0));
-//
-    //    FlightReservation updatedReservation = createFlightReservation(user, flight);
-    //    updatedReservation.setReservationDate(LocalDateTime.of(2023, 10, 11, 10, 0));
-//
-    //    Mockito.when(repository.findById("1")).thenReturn(Optional.of(existingReservation));
-    //    Mockito.when(repository.save(Mockito.any(FlightReservation.class))).thenReturn(updatedReservation);
-//
-    //    mockMvc.perform(put("/flight-reservation/1")
-    //                    .contentType(MediaType.APPLICATION_JSON)
-    //                    .content(objectMapper.writeValueAsString(request)))
-    //            .andExpect(status().isOk())
-    //            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-    //            .andExpect(jsonPath("$.id", Matchers.is("1")))
-    //            .andExpect(jsonPath("$.utilisateurId", Matchers.is("1")));
-//
-    //    Mockito.verify(repository, Mockito.times(1)).findById("1");
-    //    Mockito.verify(repository, Mockito.times(1)).save(Mockito.any(FlightReservation.class));
-    //}
+        mockMvc.perform(post("/flight-reservation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized());
+    }
 
     /*
      * DELETE /flight-reservation
@@ -234,4 +214,9 @@ public class FlightReservationControllerMockitoTest {
         Mockito.verify(repository, Mockito.times(1)).existsById("999");
     }
 
+    @Test
+    void shouldReturnUnauthorizedWhenNotLoggedForDelete() throws Exception {
+        mockMvc.perform(delete("/flight-reservation/1"))
+                .andExpect(status().isUnauthorized());
+    }
 }
