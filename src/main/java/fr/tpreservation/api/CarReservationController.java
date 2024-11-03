@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,6 +45,7 @@ public class CarReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> addCarReservation(@Valid @RequestBody PostCarReservationRequest carReservationRequest) {
         CarReservation carReservation = new CarReservation();
+        carReservation.setReservationDate(LocalDateTime.now());
         BeanUtils.copyProperties(carReservationRequest, carReservation);
         CarReservation savedCarReservation = carReservationRepository.save(carReservation);
         ReservationResponse carReservationResponse = convert(savedCarReservation);
@@ -73,9 +76,17 @@ public class CarReservationController {
         }
     }
 
+    //private ReservationResponse convert(CarReservation carReservation) {
+    //    ReservationResponse resp = ReservationResponse.builder().build();
+    //    BeanUtils.copyProperties(carReservation, resp);
+    //    return resp;
+    //}
+
     private ReservationResponse convert(CarReservation carReservation) {
         ReservationResponse resp = ReservationResponse.builder().build();
-        BeanUtils.copyProperties(carReservation, resp);
+        resp.setId(carReservation.getId());
+        resp.setReservationDate(carReservation.getReservationDate());
+        resp.setUtilisateurId(carReservation.getUser().getId());
         return resp;
     }
 }

@@ -5,19 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "payments")
 @Getter
 @Setter
 public class Payment {
     @Id
     @UuidGenerator
-    private Long id;
+    private String id;
     @Column(nullable = false)
     private String reservationId;
     @Column(nullable = false)
     private Double amount;
     @Column(nullable = false)
     private String paymentMethod;
+    private LocalDateTime paymentDate;
     private String status;
 }
