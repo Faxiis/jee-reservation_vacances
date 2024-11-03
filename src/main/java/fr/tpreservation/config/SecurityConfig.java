@@ -26,6 +26,10 @@ public class SecurityConfig {
             authorize.requestMatchers(HttpMethod.PUT, "/hostels/**").hasRole("ADMIN");
             authorize.requestMatchers(HttpMethod.DELETE, "/hostels/**").hasRole("ADMIN");
 
+            authorize.requestMatchers(HttpMethod.POST, "/flights/**").hasRole("ADMIN");
+
+            authorize.requestMatchers(HttpMethod.POST, "/parkings/**").hasRole("ADMIN");
+
             authorize.requestMatchers("users/subscribe", "/users/auth").permitAll();
 
 
