@@ -29,6 +29,7 @@ import fr.tpreservation.request.AuthRequest;
 import fr.tpreservation.request.SubscribeRequest;
 import fr.tpreservation.response.ReservationResponse;
 import fr.tpreservation.response.UtilisateurResponse;
+import fr.tpreservation.services.UtilisateurService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -39,6 +40,7 @@ public class UtilisateurApiController {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UtilisateurService utilisateurService; 
 
     @PostMapping("/auth")
     public String auth(@RequestBody AuthRequest request) {
@@ -49,7 +51,9 @@ public class UtilisateurApiController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return JwtUtil.generate(request.getUsername());
+            List<String> roles = utilisateurService.getRolesByUsername(request.getUsername());
+
+            return JwtUtil.generate(request.getUsername(), roles);
         }
 
         catch (BadCredentialsException e) {

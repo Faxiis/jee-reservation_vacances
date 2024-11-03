@@ -18,20 +18,23 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtHeaderFilter extends OncePerRequestFilter {
-      @Override
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = this.getToken(request);
         if (token != null && JwtUtil.isValid(token)) {
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            // TODO : Chercher une autre implémentation pour correspondre à une réalité
-            // if (token.equals("admin")) {
-            //     authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            // }
+            List<GrantedAuthority> authorities =  JwtUtil.getAuthoritiesFromToken(token);
+            String username = JwtUtil.getSubjectFromToken(token);
+
             Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "username", // FIXME Indiquer le username concret
+                username,
                 null,
                 authorities
             );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Log l'utilisateur et ses rôles
+            System.out.println("User: " + authentication.getName() + ", Roles: " + authentication.getAuthorities());
+
             // On ajoute l'authentification au contexte de Sécurité de Spring Security
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
