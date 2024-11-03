@@ -1,4 +1,4 @@
-package fr.tpreservation.request;
+package fr.tpreservation.request.Car;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CarRequest {
+public class PostCarRequest {
     @NotBlank(message = "Model is required")
     private String model;
 

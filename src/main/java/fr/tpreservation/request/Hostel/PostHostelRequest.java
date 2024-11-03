@@ -1,4 +1,4 @@
-package fr.tpreservation.request;
+package fr.tpreservation.request.Hostel;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class HostelRequest {
+public class PostHostelRequest {
     @NotBlank(message = "Name is required")
     private String name;
 

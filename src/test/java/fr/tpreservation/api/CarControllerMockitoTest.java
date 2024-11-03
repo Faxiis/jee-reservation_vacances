@@ -22,7 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.tpreservation.model.Car;
 import fr.tpreservation.repo.CarRepository;
-import fr.tpreservation.request.CarRequest;
+import fr.tpreservation.request.Car.PostCarRequest;
+import fr.tpreservation.request.Car.PutCarRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,7 +33,7 @@ public class CarControllerMockitoTest {
 
     @MockBean
     private CarRepository repository;
-    private static final CarRequest carRequest = new CarRequest() {{
+    private static final PostCarRequest carRequest = new PostCarRequest() {{
         setModel("Model S");
         setBrand("Tesla");
         setCapacity(5);
@@ -340,7 +341,7 @@ public class CarControllerMockitoTest {
     @WithMockUser(roles = "ADMIN")
     void shouldReturnBadRequestWhenCarRequestIsInvalid() throws Exception {
         // given
-        CarRequest invalidCarRequest = new CarRequest();
+        PostCarRequest invalidCarRequest = new PostCarRequest();
         
         Car car = new Car();
         car.setId("1");
@@ -403,7 +404,7 @@ public class CarControllerMockitoTest {
     void shouldReturnNotFoundWhenUpdatingNonExistentCar() throws Exception {
         // given
         String carId = "1";
-        CarRequest carRequest = new CarRequest();
+        PutCarRequest carRequest = new PutCarRequest();
         
         Mockito.when(this.repository.findById(carId)).thenReturn(Optional.empty());
 
@@ -425,7 +426,7 @@ public class CarControllerMockitoTest {
         // when
         this.mockMvc.perform(MockMvcRequestBuilders.put("/cars/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(new CarRequest())))
+                .content(new ObjectMapper().writeValueAsString(new PutCarRequest())))
 
         // then
             .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -439,16 +440,13 @@ public class CarControllerMockitoTest {
         // when
         this.mockMvc.perform(MockMvcRequestBuilders.put("/cars/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(new CarRequest())))
+                .content(new ObjectMapper().writeValueAsString(new PostCarRequest())))
 
         // then
             .andExpect(MockMvcResultMatchers.status().isUnauthorized());
 
         Mockito.verify(this.repository, Mockito.never()).findById(Mockito.anyString());
     }
-
-    // Todo : Doit retourner une erreur 400 si la requete est invalide.
-
 
     /*
     * DELETE /cars/{id}
