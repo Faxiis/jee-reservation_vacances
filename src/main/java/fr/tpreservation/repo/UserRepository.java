@@ -7,4 +7,6 @@ import fr.tpreservation.model.Utilisateur;
 
 public interface UserRepository extends JpaRepository<Utilisateur, String> {
     Optional<Utilisateur> findByUsername(String username);
+    boolean existsByUsername(String username);
+
 }

@@ -27,5 +27,4 @@ public class UtilisateurService {
               )
               .orElseGet(List::of); // Retourner une liste vide si l'utilisateur n'existe pas
   }
-  
 }

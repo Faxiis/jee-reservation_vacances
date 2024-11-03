@@ -1,6 +1,5 @@
 package fr.tpreservation.config;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +15,6 @@ import io.jsonwebtoken.security.Keys;
 
 public class JwtUtil {
     private static final String KEY = "19D6IjLAudjoZMxFHnp/Owq2SKapi7JRqGhUo82TrAMF9JBz7ATG4SnDLulvQqI2";
-    // private static final String KEY = RandomStringUtils.randomAlphanumeric(64);
     private JwtUtil() { }
     public static String generate(String username, List<String> roles) {
         // Création de la clé de signature
