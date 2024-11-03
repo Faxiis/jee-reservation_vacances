@@ -6,15 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class PutHostelReservationRequest {
     @NotNull(message = "Check-in date is required")
-    private LocalDate checkInDate;
+    private LocalDateTime checkInDate;
 
     @NotNull(message = "Check-out date is required")
-    private LocalDate checkOutDate;
+    private LocalDateTime checkOutDate;
 
     @Positive(message = "Total price must be greater than 0")
     private int totalPrice;
