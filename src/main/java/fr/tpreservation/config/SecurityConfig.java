@@ -28,6 +28,7 @@ public class SecurityConfig {
 
             authorize.requestMatchers("users/subscribe", "/users/auth").permitAll();
 
+
             authorize.requestMatchers("/**").authenticated();
         });
         http.csrf(csrf -> csrf.disable());
