@@ -1,7 +1,6 @@
 package fr.tpreservation.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +31,6 @@ public class JwtHeaderFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            // Log l'utilisateur et ses rôles
-            System.out.println("User: " + authentication.getName() + ", Roles: " + authentication.getAuthorities());
 
             // On ajoute l'authentification au contexte de Sécurité de Spring Security
             SecurityContextHolder.getContext().setAuthentication(authentication);
